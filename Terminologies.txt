@@ -1,3 +1,9 @@
+Summary of "A Introduction to Ray Tracing"
+
+**********************
+Chapter 1 Introduction
+**********************
+
 Backward ray tracing
 
 Shadow feeler sends shadow ray to light source to check whether it is a illumination ray.
@@ -20,4 +26,53 @@ Stochastic/ distributed ray tracing coincidently reduce the diffuse rays tracing
 Statistical supersampling evaluates the “percentage of likelihood” of a right colour to determine how many rays are sent for each pixel.
 
 
+
+***********************
+Chapter 2 Intersections
+***********************
+
+
+/*
+  Polygons
+  Ray intersect with polygon: (pdf page 63)
+    1. Check whether ray inersect plane of polygon
+    2. Project ray into plane
+    3. Project graph onto the plan where abs(A, B, C) is minimum
+    4. Put the intersection to center, calculate toward u-axis
+*/
+
+
+/*
+  Bounding Volumn (Box)
+  Ray intersect with box (pdf page 76)
+    1. Tracking the distance to all slaces
+    2. The ray missed the box iff the MAX (near value) > MIN (far value)
+*/
+
+
+/*
+  Intersection with Cone
+*/
+
+
+
+*************************
+Chapter 3 Surface Physics
+*************************
+
+All objects have their resonant frequency, where they reflects the most.
+
+
+
+
+
+
+
+
+
+
+Efficiency & Bugs
+p81:  Simplify formulas first and then do the calculations (associative laws A*B+A*C = A*(B+C) improves efficiency!)
+
+eps = 1e-10 && using long double
 
