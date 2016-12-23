@@ -62,6 +62,26 @@ Chapter 3 Surface Physics
 
 All objects have their resonant frequency, where they reflects the most.
 
+Metamers are spectrally different but perceptually equivalent colors -> no correct spectrum for “orange”; they all look exactly the same 
+((frequency vs. amplitude) plot vs. perception)
+
+Perfect Reflection
+    - Incident ray I, Normal N, Reflection ray R (all unit vector)
+    - R = I - 2*(N*I)N
+Perfect Diffuse (Lambertian reflection model):
+    - Amount diffuse is proportional to cos(θ)
+
+Perfect Specular Transmission:
+    - sin (θ1) / sin (θ2) = η2 / η1, where η is index of refraction
+Perfect Specular 
+Total internal reflection (page 146) condition 1+ηit (Ci)*N > 0? 
+
+Perfect Diffuse Transimission ≈ Perfect diffuse reflection, proportion to cos (θ)
+
+Shading Model is used in real life to handle rough surface & color shifting.
+app
+
+ 
 
 
 
@@ -75,4 +95,3 @@ Efficiency & Bugs
 p81:  Simplify formulas first and then do the calculations (associative laws A*B+A*C = A*(B+C) improves efficiency!)
 
 eps = 1e-10 && using long double
-
