@@ -15,14 +15,9 @@ Anti-aliasing:
 	Spatial: motion blurring
 	Temporal: [adaptive] supersampling (deterministic / stochastic)
 
-Stochastic/ distributed ray tracing coincidently reduce the diffuse rays tracing problem by introducing noise, and hopefully, it will send more transmitted rays to directions where various lights come. 
+Stochastic/ distributed ray tracing coincidently reduce the diffuse rays tracing problem by introducing noise, and hopefully, it will send more transmitted rays to directions where various lights come. (It also helps in depth of field and soft edges on shadows)
 
- randomly send rays (say 9 rays/pixel)
-
-Stochastic ray tracing: substitute jaggies with noises
-
-
-
+Statistical supersampling evaluates the “percentage of likelihood” of a right colour to determine how many rays are sent for each pixel.
 
 
 
