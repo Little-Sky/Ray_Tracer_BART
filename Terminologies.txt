@@ -1,0 +1,28 @@
+Backward ray tracing
+
+Shadow feeler sends shadow ray to light source to check whether it is a illumination ray.
+
+Among all illuminating light, we only cares propagated light, which are (specular / diffuse) * (reflection / transmission) (4 types).
+
+From eyes, we trace incident ray / eye ray / pixel ray to objects, and using surface normal to determine the direction of transmitted ray and reflected ray.
+
+Recursively creates a ray tree and traverse on it.
+Stops when we leave the scene OR contribution to the final image gets too small (reflect and transmit percent) -> called adaptive tree-depth control.
+
+Aliasing (spatial or temporal) is a fundamental problem of sampling any signal in signal processing.
+
+Anti-aliasing:  
+	Spatial: motion blurring
+	Temporal: [adaptive] supersampling (deterministic / stochastic)
+
+Stochastic/ distributed ray tracing coincidently reduce the diffuse rays tracing problem by introducing noise, and hopefully, it will send more transmitted rays to directions where various lights come. 
+
+ randomly send rays (say 9 rays/pixel)
+
+Stochastic ray tracing: substitute jaggies with noises
+
+
+
+
+
+
