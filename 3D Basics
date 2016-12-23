@@ -1,0 +1,127 @@
+#include <cstdio>
+#include <cmath>
+#include <vector>
+using namespace std;
+
+//3D basics
+
+const double eps = 1e-10;
+int dcmp(double x){
+  if (fabs(x) < eps) return 0; 
+  else return x<0 ? -1 : 1;
+}
+
+struct Point {
+  double x, y, z;
+  Point(double x=0, double y=0, double z=0):x(x),y(y),z(z) { }
+  void read(){ scanf("%llf%llf%llf", &x, &y, &z); }
+};
+
+typedef Point Vector;
+
+double ACOS(double x){
+  if (!dcmp(1-x)) x = 1;
+  if (!dcmp(1+x)) x = -1;
+  return acos(x); //loss precision significantly (14->7, 8->5 and so on). Avoid if possible!
+}
+
+double SQRT(double x){
+  if (dcmp(x) < 0) return 0;
+  return sqrt(x);
+}
+
+Vector operator + (const Vector& A, const Vector& B){ return Vector(A.x+B.x, A.y+B.y, A.z+B.z); }
+Vector operator - (const Point& A, const Point& B){ return Vector(A.x-B.x, A.y-B.y, A.z-B.z); }
+Vector operator * (const Vector& A, const double& p){ return Vector(A.x*p, A.y*p, A.z*p); }
+Vector operator / (const Vector& A, const double& p){ return Vector(A.x/p, A.y/p, A.z/p); }
+bool operator == (const Point& A, const Point& B){ return dcmp(A.x-B.x) == 0 && dcmp(A.y-B.y) == 0 && dcmp(A.z-B.z) == 0; }
+
+double Dot(const Vector& A, const Vector& B){ return A.x*B.x + A.y*B.y + A.z*B.z; }
+double Length(const Vector& A){ return sqrt(Dot(A, A)); }
+double Angle(const Vector& A, const Vector& B){ return ACOS(Dot(A, B) / Length(A) / Length(B));}
+Vector Cross(const Vector& A, const Vector& B){ return Vector(A.y*B.z - A.z*B.y, A.z*B.x - A.x*B.z, A.x*B.y - A.y*B.x); }
+double Area2(const Point& A, const Point& B, const Point& C){ return Length(Cross(B-A, C-A)); } // 2*area
+double Volume6(Point A, Point B, Point C, Point D){ return Dot(D-A, Cross(B-A, C-A)); } //6*volumn
+
+
+// distance from point p to plane p0-n. n must be unit vector
+double DistanceToPlane(Point p, Point p0, Vector n) {
+  return fabs(Dot(p-p0, n));
+}
+
+// projection of p on plane p0-n. n must be unit vector
+Point GetPlaneProjection(Point p, Point p0, Vector n) {
+  return p - n*Dot(p-p0, n);
+}
+
+//Line p1, p2 intersection with plan p0-n. Plane line must not be parralel (Dot(n, p2-p1) != 0)
+Point LinePlaneIntersection(Point p1, Point p2, Point p0, Vector n){
+    Vector v = p2-p1;
+    double t = (Dot(n, p0-p1) / Dot(n, p2-p1));
+    return p1 + v*t; // For ray, must have t > 0
+}
+
+//distance between point P and line A, B
+double DistanceToLine( Point& p, Point& a, Point& b) {
+  Vector v1 = b - a, v2 = p - a;
+  return Length(Cross(v1, v2)) / Length(v1);
+}
+
+//distance between point and a segment
+double DistanceToSeg(Point p, Point a, Point b){
+  if(a == b) return Length(p-a);
+  Vector v1 = b-a, v2 = p-a, v3 = p-b;
+  if(dcmp(Dot(v1, v2)) < 0) return Length(v2);
+  else if(dcmp(Dot(v1, v3)) > 0) return Length(v3);
+  else return Length(Cross(v1, v2)) / Length(v1);  
+}
+
+//求异面直线 p1+s*u与p2+t*v的公垂线对应的s 如果平行|重合，返回false
+bool LineDistance3D(Point p1, Vector u, Point p2, Vector v, double& s){
+  double b = Dot(u, u) * Dot(v, v) - Dot(u, v) * Dot(u, v);
+  if(dcmp(b) == 0) return false;
+  double a = Dot(u, v) * Dot(v, p1-p2) - Dot(v, v) * Dot(u, p1-p2);
+  s = a/b;
+  return true;
+}
+
+//p inside triangle p0, p1, p2?
+bool PointInTri(const Point& p, const Point& p0, const Point& p1, const Point& p2) {
+  double area1 = Area2(p, p0, p1);
+  double area2 = Area2(p, p1, p2);
+  double area3 = Area2(p, p2, p0);
+  return dcmp(area1 + area2 + area3 - Area2(p0, p1, p2)) == 0;
+}
+
+// 三角形P0P1p2是否和线段AB相交
+bool TriSegIntersection(Point& p0, Point& p1, Point& p2, Point& a, Point& b, Point& p) {
+  Vector n = Cross(p1-p0, p2-p0);
+  if(dcmp(Dot(n, b-a)) == 0) return false; // 线段A-B和平面p0p1p2平行或共面
+  else { // 平面A和直线p1-p2有惟一交点
+    double t = Dot(n, p0-a) / Dot(n, b-a);
+    if(dcmp(t) < 0 || dcmp(t-1) > 0) return false; // 不在线段AB上
+    p = a + (b-a)*t; // 交点
+    return PointInTri(p, p0, p1, p2);
+  }
+}
+
+struct Face {
+  int v[3];
+  Face(int a, int b, int c) { v[0] = a; v[1] = b; v[2] = c; }
+  Vector Normal(const vector<Point>& p) const {
+    Vector v1 = p[v[1]]-p[v[0]], v2 = p[v[2]]-p[v[0]];
+    double len = Length(v1) * Length(v2);
+    return Cross(v1, v2) / len;
+  }
+};
+
+struct ConvexPolyhedron {
+  int n;
+  vector<Point> P, P2;
+  vector<Face> faces;
+};
+
+int main(){
+    
+    return 0;
+}
