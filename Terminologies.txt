@@ -56,8 +56,17 @@ Chapter 2 Intersections
 
 
 
+*********************************************
+Chapter 3 Ray-Surface Intersection Algorithms
+*********************************************
+Constructive solid geometry (CSG): contruct solid using primitives and three set operators (union, intersection and difference)
+
+Hierarchical bounding volumes: sort candidate nodes by their distance to the current ray (heap), and DFS through them.
+
+
+
 *************************
-Chapter 3 Surface Physics
+Chapter 4 Surface Physics
 *************************
 
 All objects have their resonant frequency, where they reflects the most.
@@ -95,17 +104,48 @@ An Applicable Shading Model (page 152-155)
         - Setting: V, Lj, N, (Lj is the light vector from light source j), then draw Hj bisect V and Lj. Name angle (V, Hj) = θ, angle(Hj, N) = α (For transmit, only put Lj to the other side).
         
 A faster Shader: 
-It is a common technique to debug your images with a faster, cheaper shading model, adn then produce the final high-quality renderings with a more accurate shading equation.
+It is a common technique to debug your images with a faster, cheaper shading model, and then produce the final high-quality renderings with a more accurate shading equation.
 
-The Hall Shading Model:
-The intensity of light leaving a surface in a given direction is a function of the 1. illumination light, 2. the properties and geometry of the surface itself, and 3. the direction of the viewer. 
+The Hall Shading Model: (page 160)
+8 types: 
+  Light source: light source / other bodies
+  Light path:   reflection / transmission
+  Surface type: specular / diffuse  
+5 factors:
+  Diffuse from other bodies are regards as "ambient" term and diffuse transmission from light sources is ignored. 
 
 
 
 
+*******************************************************
+Chapter 5 Stochastic Sampling & Distributed Ray Tracing
+*******************************************************
+
+Poisson disk sampling, by sampling beyond Nyquist limit, is used by human eyes to reduce aliasing problems.
+
+We use jittering to approximate poisson disk sampling - from regularly spaced sample, each sample adds a random variable to make sure that all space are equally likely to be sampled.
+
+Consider a pixel as a regular grid of one or more rectangular subpixels, each with one sample point. Each sample point is placed in the middle of a subpixel, and then noise is added to the x and y locations independently so that each sample point occurs at some random location within its subpixel.
+
+Radiosity method and cone tracing.
+
+If the rendering integral is evaluated with stocahstic sampling, and we perform a Monte Carlo evaluation of the integrals by stochastically distributing the sample points (rays) in those additional dimensions (the integral variables are viewed as another dimension)/ This is claled probabilitic ray tracing or distributed ray tracing.
+    e.g. Distributing reflected ray according to the speecular distribution function produces gloss (blurry reflection)
+         Distributing rays in time produces motion blur.
+
+Simulate depth of field: (page 182)
+    Postprocessing approach: each object is first rendered in sharp focus, and then convolved with a filter the size of the circle of confusion. 
+    However, this never be completely correct. Because visibility is calculated form a single point. (e.g. different parts of lens' visibility may differs)
+
+Motion blur: distributing the rays or sample points in time.
 
 
+??? page 205 "By using different distributions of rays, the motion can be blurred with a box filter or a weighted filter or can be strobed?" What is box filter and weighted filter?
 
+Implement of distributed ray tracing
+1. Nonspatial jittering
+    Distribute rays in the additional dimension using uncoreelated random values always lead to noisy image. So we'd better use jittering to mimic poisson disk distribution.
+    
 
 
 
@@ -114,3 +154,5 @@ Efficiency & Bugs
 p81:  Simplify formulas first and then do the calculations (associative laws A*B+A*C = A*(B+C) improves efficiency!)
 
 eps = 1e-10 && using long double
+
+p205: Care must be taken in bounding moving objects. The bound should depend on time so that the number of potentially visible objects does not grow unacceptably with their speed.
