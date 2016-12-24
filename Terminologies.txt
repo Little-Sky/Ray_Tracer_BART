@@ -18,8 +18,8 @@ Stops when we leave the scene OR contribution to the final image gets too small 
 Aliasing (spatial or temporal) is a fundamental problem of sampling any signal in signal processing.
 
 Anti-aliasing:  
-	Spatial: motion blurring
-	Temporal: [adaptive] supersampling (deterministic / stochastic)
+    Spatial: motion blurring
+    Temporal: [adaptive] supersampling (deterministic / stochastic)
 
 Stochastic/ distributed ray tracing coincidently reduce the diffuse rays tracing problem by introducing noise, and hopefully, it will send more transmitted rays to directions where various lights come. (It also helps in depth of field and soft edges on shadows)
 
@@ -65,23 +65,42 @@ All objects have their resonant frequency, where they reflects the most.
 Metamers are spectrally different but perceptually equivalent colors -> no correct spectrum for “orange”; they all look exactly the same 
 ((frequency vs. amplitude) plot vs. perception)
 
-Perfect Reflection
+Perfect Specular Reflection
     - Incident ray I, Normal N, Reflection ray R (all unit vector)
     - R = I - 2*(N*I)N
-Perfect Diffuse (Lambertian reflection model):
+    
+Perfect Diffuse Reflection(Lambertian reflection model):
     - Amount diffuse is proportional to cos(θ)
 
 Perfect Specular Transmission:
     - sin (θ1) / sin (θ2) = η2 / η1, where η is index of refraction
-Perfect Specular 
-Total internal reflection (page 146) condition 1+ηit (Ci)*N > 0? 
+    - Total internal reflection (page 146) condition 1+ηit (Ci)*N > 0? 
 
-Perfect Diffuse Transimission ≈ Perfect diffuse reflection, proportion to cos (θ)
+Perfect Diffuse Transmission
+    - ≈ Perfect diffuse reflection, proportion to cos (θ)
 
 Shading Model is used in real life to handle rough surface & color shifting.
-app
+    - Simplified version using light vectors: ray arrive from light vector (reflected, transmitted, and shadow), and depart from viewing vector (incident ray).
+    - Shadow ray now becomes illumination ray, and we calculate how much light is headed in the direction of the viewing vector.
 
- 
+
+An Applicable Shading Model (page 152-155)
+    - Consider reflected ray = diffuse + specular components
+    - Idr(λ) = Ilj(λ)*Fdr(λ)*(N*L)
+      diffusely reflected light = spectrum of light source j * diffuse reflection curve * (surface normal * light vector)
+
+    - Microfacet model for perfect reflections on rough plane (page 154)
+        - The color and intensity of the specularly reflected light leaving a  given point may be dependent on the direction and color of the incoming light, ht ecolor of the object, and the distribution of the microfacets on the surface
+        - Larger θ -> more bounces -> heavier colored by the material
+        - Setting: V, Lj, N, (Lj is the light vector from light source j), then draw Hj bisect V and Lj. Name angle (V, Hj) = θ, angle(Hj, N) = α (For transmit, only put Lj to the other side).
+        
+A faster Shader: 
+It is a common technique to debug your images with a faster, cheaper shading model, adn then produce the final high-quality renderings with a more accurate shading equation.
+
+The Hall Shading Model:
+The intensity of light leaving a surface in a given direction is a function of the 1. illumination light, 2. the properties and geometry of the surface itself, and 3. the direction of the viewer. 
+
+
 
 
 
